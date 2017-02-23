@@ -1,0 +1,47 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: "com.commercehub.cucumber-jvm"
+
+sourceCompatibility = 1.8
+
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.commercehub:gradle-cucumber-jvm-plugin:0.8"
+    }
+}
+
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'org.projectlombok:lombok:1.16.10'
+    
+    testCompile 'junit:junit:4.11'
+    testCompile 'ch.qos.logback:logback-classic:1.1.7'
+    testCompile 'info.cukes:cucumber-java:1.2.3'
+    testCompile 'info.cukes:cucumber-junit:1.2.3'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtime
+    }
+}
+
+build.dependsOn buildZip
